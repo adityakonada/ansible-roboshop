@@ -30,4 +30,31 @@
       dest: /app
       remote_src: yes
 
+  - name: install npm dependencies in /app
+    ansible.builtin.command: npm install # --> telling to install npm ( we can use both shell or command )
+    args:
+      chdir: /app # these 2 lines are == cd app (changing directory to /app)
+
+  - name: copying catalogue.service
+    ansible.builtin.copy:
+      src: catalogue.service
+      dest: /etc/systemd/system/catalogue.service
+  
+  - name: loading the service - daemon reload
+    ansible.builtin.systemd_service:
+      deamon_reload: true
+
+    #we are suppose to enable and start daemon here, but before that we are loading some data first because there are some chances to get error. 
+
+  - name: copying mongodb repo
+    ansible.builtin.copy:
+      src: mongo.repo
+      dest: /etc/yum.repos.d/mongo.repo
+
+  - name: install mongodb client
+    ansible.builtin.package:
+      name: mongodb-org-client
+      state: present 
+      # once we load the data, and run the same thing again (loading data) we get error saying that duplicate keys. 
+
 
