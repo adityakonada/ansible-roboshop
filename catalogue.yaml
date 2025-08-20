@@ -69,6 +69,6 @@
       msg: "product count is {{product_count}}"
 
   - name: loading data into catalogue
-    ansible.builtin.command: mongo --host mongodb.adityakonada.site </app/schema/catalogue.js
+    ansible.builtin.command: mongo --host mongodb.adityakonada.site < /app/schema/catalogue.js #note: space between < /app is imp (typo error in documentation)
 
 
