@@ -69,6 +69,10 @@
       msg: "product count is {{product_count}}"
 
   - name: loading data into catalogue
-    ansible.builtin.command: mongo --host mongodb.adityakonada.site < /app/schema/catalogue.js #note: space between < /app is imp (typo error in documentation)
+    ansible.builtin.command: mongo --host mongodb.adityakonada.site < /app/schema/catalogue.js 
+    when: product_count.stdout == 0 # product)count.stdout is from json i.e, from output
+    # this task is saying to load schema only if there are no product counts, skip if already loaded to avoid duplicate keys error. 
+    #note: space between < /app is imp (typo error in documentation)
+
 
 
