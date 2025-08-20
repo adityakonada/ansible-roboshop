@@ -42,7 +42,7 @@
   
   - name: loading the service - daemon reload
     ansible.builtin.systemd_service:
-      deamon_reload: true
+      daemon_reload: true
 
     #we are suppose to enable and start daemon here, but before that we are loading some data first because there are some chances to get error. 
 
