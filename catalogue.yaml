@@ -54,9 +54,18 @@
   - name: install mongodb client
     ansible.builtin.package:
       name: mongodb-org-shell
-      state: present 
+      state: present  # with this task, we installed mongodb client in catalogue server.
 
       #next task is loading schema : 
       # once we load the schema data, and run the same thing again (loading data) we get error saying that duplicate keys. 
+    
+  - name: get the catogories count
+    ansible.builtin.command: mongo --host mongodb.adityakonada.site --quiet --eval 'db = db.getSiblingDB("catalogue"); db.products.count()'
+    register: product_count
+    #this command is == checking the catalogue.js file in catalogue server > cd /app/schema > cat catalogue.js (contains the default products) 
+    #db.products.count() == checks how many products are there in it. 
+  - name: print the count
+    ansible.builtin.debug:
+      msg: "product count is {{product_count}}"
 
 
