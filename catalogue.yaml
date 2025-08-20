@@ -1,0 +1,15 @@
+- name: catalogue server
+  hosts: catalogue
+  become: yes
+  tasks:
+  - name: Disable Node.js module
+    ansible.builtin.dnf:
+     name: nodejs
+     state: absent
+     module: true
+
+  - name: Enable Node.js 18 module
+    ansible.builtin.dnf:
+     name: nodejs:18
+     state: present
+     module: true
