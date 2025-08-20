@@ -74,5 +74,12 @@
     # this task is saying to load schema only if there are no product counts, skip if already loaded to avoid duplicate keys error. 
     #note: space between < /app is imp (typo error in documentation)
 
+  - name: enabling and starting catalogue service 
+    ansible.builtin.service:
+      name: catalogue
+      state: started
+      enabled: yes
+# now we are enabling & starting the catalogue service that should happen in line 43 - in daemon reload task
+
 
 
