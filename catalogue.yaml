@@ -53,8 +53,10 @@
 
   - name: install mongodb client
     ansible.builtin.package:
-      name: mongodb-org-client
+      name: mongodb-org-shell
       state: present 
-      # once we load the data, and run the same thing again (loading data) we get error saying that duplicate keys. 
+
+      #next task is loading schema : 
+      # once we load the schema data, and run the same thing again (loading data) we get error saying that duplicate keys. 
 
 
