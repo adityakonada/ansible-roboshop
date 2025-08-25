@@ -3,7 +3,7 @@
   become: yes
   tasks:
   - name: Disable default Node.js module
-    ansible.builtin.shell: dnf module disable nodejs -y ; dnf module enable nodejs:18 -y
+    ansible.builtin.shell: dnf module disable nodejs -y ; dnf module enable nodejs:18 -y #why .shell, in notes
 
   - name: Install node js
     ansible.builtin.package:
@@ -13,7 +13,12 @@
   - name: create roboshop user
     ansible.builtin.user: 
      name: roboshop
-     
+
+  - name: Recursively remove /app directory # deleting app directory if already exists: to avoid error 
+    ansible.builtin.file:
+      path: /app
+      state: absent
+
   - name: Create /app directory
     ansible.builtin.file:
       path: /app
@@ -28,12 +33,12 @@
     ansible.builtin.unarchive:
       src: /tmp/catalogue.zip 
       dest: /app
-      remote_src: yes
+      remote_src: yes # stating that zip file is availabe in catalogue server==remote server. (not it ansible server)
 
   - name: install npm dependencies in /app
     ansible.builtin.command: npm install # --> telling to install npm ( we can use both shell or command )
     args:
-      chdir: /app # these 2 lines are == cd app (changing directory to /app)
+      chdir: /app # these 2 lines (args: & chdir: ) are == cd app (changing directory to /app)
 
   - name: copying catalogue.service
     ansible.builtin.copy:
@@ -70,7 +75,7 @@
 
   - name: loading data into catalogue
     ansible.builtin.command: mongo --host mongodb.adityakonada.site < /app/schema/catalogue.js 
-    when: product_count.stdout == 0 # product)count.stdout is from json i.e, from output
+    when: product_count.stdout == "0" # product)count.stdout is from json i.e, from output
     # this task is saying to load schema only if there are no product counts, skip if already loaded to avoid duplicate keys error. 
     #note: space between < /app is imp (typo error in documentation)
 

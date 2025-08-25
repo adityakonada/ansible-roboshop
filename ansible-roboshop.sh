@@ -30,7 +30,7 @@ do
     {
         "Comment": "Creating a record set for cognito endpoint"
         ,"Changes": [{
-        "Action"              : "CREATE"
+        "Action"              : "UPSERT"
         ,"ResourceRecordSet"  : {
             "Name"              : "'$i'.'$DOMAIN_NAME'"
             ,"Type"             : "A"
@@ -47,3 +47,4 @@ done
 #name = mongodb.adityakonada.site
 #type = A-record 
 #Value = private Ip address. 
+# UPSERT (line 33 - it will edit existing A-record IP address, if there is no existing A record, it will create one)
