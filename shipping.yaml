@@ -1,0 +1,30 @@
+- name: install shipping component
+  hosts: shipping
+  become: yes
+  vars: #variables
+    mysql_password: RoboShop@1
+  tasks:
+  - name: install maven
+    ansible.builtin.dnf:
+      name: maven
+      state: present
+
+  - name: create roboshop user
+    ansible.builtin.user:
+      name: roboshop
+
+  - name: Recursively remove app directory
+    ansible.builtin.file:
+      path: /app
+      state: absent
+
+  - name: create app directory
+    ansible.builtin.file:
+      path: /app
+      state: directory
+
+  - name: download shipping application
+    ansible.builtin.get_url:
+      url: https://roboshop-builds.s3.amazonaws.com/shipping.zip
+      dest: /tmp
+
