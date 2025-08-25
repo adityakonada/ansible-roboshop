@@ -53,10 +53,10 @@
 
   - name: Copy mongodb repo
     ansible.builtin.copy:
-      src: mongodb.repo
+      src: mongo.repo #note my name is different than class name of mongorepo
       dest: /etc/yum.repos.d/mongodb.repo
-      remote_src: yes 
       
+
   - name: Install mongodb client
     ansible.builtin.package:
       name: mongodb-org-shell
