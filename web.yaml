@@ -16,7 +16,7 @@
     ansible.builtin.file:
       path: /usr/share/nginx/html
       state: directory
-      
+
   - name: download the roboshop html zip file
     ansible.builtin.get_url:
       url: https://roboshop-builds.s3.amazonaws.com/web.zip
@@ -37,6 +37,6 @@
     ansible.builtin.service:
       name: nginx
       state: started
-      enabled: true
+      enabled: yes
 
 
