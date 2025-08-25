@@ -58,16 +58,33 @@
       name: mysql
       state: present
 
-  - name: check cities schema exists or not
-    ansible.builtin.command:  mysql -h mysql.adityakonada.site -uroot -p{{mysql_password}} -sN -e "SELECT COUNT(*) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'cities'"
+  - name: check cities database exists
+    ansible.builtin.command: >
+      mysql -h mysql.adityakonada.site -uroot -p{{mysql_password}}
+      -sN -e "SELECT COUNT(*) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='cities';"
     register: schema
+    ignore_errors: yes   # NEW: avoids stopping if DB exists
 
-  - name: print output
+  - name: print schema output
     ansible.builtin.debug:
-      msg: "schema output: {{schema}}"
+      msg: "Schema exists check: {{ schema.stdout }}"  # NEW: optional debug
+
+  - name: create cities database and table
+    ansible.builtin.shell: >
+      mysql -h mysql.adityakonada.site -uroot -p{{mysql_password}}
+      < /app/db/schema.sql   # UPDATED PATH
+    when: schema.stdout != "1"
 
   - name: load cities data
-    ansible.builtin.shell: "mysql -h mysql.adityakonada.site -uroot -p{{mysql_password}}  < /app/schema/shipping.sql"
+    ansible.builtin.shell: >
+      mysql -h mysql.adityakonada.site -uroot -p{{mysql_password}}
+      < /app/db/master-data.sql   # NEW TASK
+    when: schema.stdout != "1"
+
+  - name: create shipping MySQL user
+    ansible.builtin.shell: >
+      mysql -h mysql.adityakonada.site -uroot -p{{mysql_password}}
+      < /app/db/app-user.sql   # NEW TASK
     when: schema.stdout != "1"
 
   - name: start and enable shipping
